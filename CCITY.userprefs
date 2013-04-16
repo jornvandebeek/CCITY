@@ -1,0 +1,46 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Functions\CallStatic.cs">
+    <Files>
+      <File FileName="Assets\FunctionBehavior.cs" Line="103" Column="12" />
+      <File FileName="Assets\Socket.cs" Line="16" Column="42" />
+      <File FileName="Assets\Output.cs" Line="14" Column="6" />
+      <File FileName="Assets\Input.cs" Line="4" Column="34" />
+      <File FileName="Assets\Functions\TriggerFunction.cs" Line="11" Column="24" />
+      <File FileName="Assets\Functions\LoggerFunction.cs" Line="22" Column="1" />
+      <File FileName="Assets\Functions\SHA512Function.cs" Line="25" Column="76" />
+      <File FileName="Assets\CamDragger.cs" Line="18" Column="43" />
+      <File FileName="Assets\MiniJson.cs" Line="401" Column="13" />
+      <File FileName="Assets\Functions\CallStatic.cs" Line="26" Column="42" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Functions" expanded="True">
+                <Node name="CallStatic.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+          <Node name="Assembly-CSharp-firstpass" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Standard Assets" expanded="True">
+                <Node name="Scripts" expanded="True">
+                  <Node name="Utility Scripts" expanded="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
