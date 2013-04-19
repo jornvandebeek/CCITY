@@ -1,16 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Functions\CallStatic.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\FunctionBehavior.cs">
     <Files>
-      <File FileName="Assets\FunctionBehavior.cs" Line="103" Column="12" />
-      <File FileName="Assets\Socket.cs" Line="16" Column="42" />
+      <File FileName="Assets\FunctionBehavior.cs" Line="111" Column="33" />
+      <File FileName="Assets\Socket.cs" Line="43" Column="52" />
       <File FileName="Assets\Output.cs" Line="14" Column="6" />
       <File FileName="Assets\Input.cs" Line="4" Column="34" />
       <File FileName="Assets\Functions\TriggerFunction.cs" Line="11" Column="24" />
       <File FileName="Assets\Functions\LoggerFunction.cs" Line="22" Column="1" />
       <File FileName="Assets\Functions\SHA512Function.cs" Line="25" Column="76" />
       <File FileName="Assets\CamDragger.cs" Line="18" Column="43" />
-      <File FileName="Assets\MiniJson.cs" Line="401" Column="13" />
+      <File FileName="Assets\MiniJson.cs" Line="73" Column="83" />
       <File FileName="Assets\Functions\CallStatic.cs" Line="26" Column="42" />
     </Files>
     <Pads>
@@ -18,18 +18,8 @@
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Assets" expanded="True">
-              <Node name="Functions" expanded="True">
-                <Node name="CallStatic.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-          <Node name="Assembly-CSharp-firstpass" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="Standard Assets" expanded="True">
-                <Node name="Scripts" expanded="True">
-                  <Node name="Utility Scripts" expanded="True" />
-                </Node>
-              </Node>
+              <Node name="Functions" expanded="True" />
+              <Node name="FunctionBehavior.cs" selected="True" />
             </Node>
           </Node>
         </State>

@@ -3,21 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-class TargetSocket : IAsJson{
-    Guid targetId;
-
-    public TargetSocket(Socket target){
-        targetId = target.id;
-    }
-
-    public IDictionary AsJson(){
-        Dictionary<string, object> hash = new Dictionary<string, object>();
-        hash.Add("targetId", targetId);
-        hash.Add("type", this.GetType().Name);
-        return hash;
-    }
-}
-
 public abstract class Socket : MonoBehaviour, IAsJson {
     static Socket startedDragOn;
     static Socket lastEntered;
@@ -25,13 +10,12 @@ public abstract class Socket : MonoBehaviour, IAsJson {
 
     public FunctionBehavior parentFunction;
     public Socket target;
-    public Guid id;
+    int index;
 
     LineRenderer line;
 
 
     void Start(){
-        id = Guid.NewGuid();
         connectorLinePrefab = connectorLinePrefab ?? (GameObject) Resources.Load("ConnectorLine");
     }
 
@@ -53,6 +37,10 @@ public abstract class Socket : MonoBehaviour, IAsJson {
 
     void OnMouseEnter(){
         lastEntered = this;
+    }
+
+    public object[] GetId(){
+        return new object[] {parentFunction.GetId(), index};
     }
 
     protected abstract void Connect(Socket other);
@@ -86,13 +74,17 @@ public abstract class Socket : MonoBehaviour, IAsJson {
     public IDictionary AsJson(){
         Dictionary<string, object> hash = new Dictionary<string, object>();
         hash.Add("name", name);
-        hash.Add("id", id);
+        hash.Add("id", GetId());
         if(target){
-            hash.Add("target", new TargetSocket(target));
+            hash.Add("targetId", target.GetId());
         } else {
-            hash.Add("target", null);
+            hash.Add("targetId", null);
         }
         hash.Add("type", this.GetType().Name);
         return hash;
+    }
+
+    public void SetTarget(Socket other){
+        target = other;
     }
 }
