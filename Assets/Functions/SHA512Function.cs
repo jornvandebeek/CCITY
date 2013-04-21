@@ -28,7 +28,6 @@ public class SHA512Function : FunctionBehavior
         }
         string result = Convert.ToBase64String(shaM.ComputeHash(Encoding.UTF8.GetBytes((string) (object)data)));
 
-        outputs[0].Trigger<string>(result);
+        GetOutput(0).Trigger<string>(result);
     }
-
 }

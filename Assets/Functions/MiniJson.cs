@@ -7,6 +7,8 @@
  * Simplified it so that it doesn't throw exceptions
  * and can be used in Unity iPhone with maximum code stripping.
  *
+ * IAsJson handling added by Jorn van de Beek
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -549,5 +551,9 @@ namespace MiniJSON {
                 }
             }
         }
+    }
+
+    interface IAsJson{
+        IDictionary AsJson();
     }
 }

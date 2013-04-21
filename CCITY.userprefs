@@ -1,25 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\FunctionBehavior.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Functions\FunctionBehavior.cs">
     <Files>
-      <File FileName="Assets\FunctionBehavior.cs" Line="111" Column="33" />
-      <File FileName="Assets\Socket.cs" Line="43" Column="52" />
-      <File FileName="Assets\Output.cs" Line="14" Column="6" />
-      <File FileName="Assets\Input.cs" Line="4" Column="34" />
-      <File FileName="Assets\Functions\TriggerFunction.cs" Line="11" Column="24" />
-      <File FileName="Assets\Functions\LoggerFunction.cs" Line="22" Column="1" />
-      <File FileName="Assets\Functions\SHA512Function.cs" Line="25" Column="76" />
-      <File FileName="Assets\CamDragger.cs" Line="18" Column="43" />
-      <File FileName="Assets\MiniJson.cs" Line="73" Column="83" />
-      <File FileName="Assets\Functions\CallStatic.cs" Line="26" Column="42" />
+      <File FileName="Assets\Functions\FunctionBehavior.cs" Line="18" Column="30" />
+      <File FileName="Assets\Functions\TriggerFunction.cs" Line="19" Column="1" />
+      <File FileName="Assets\Functions\Socket.cs" Line="123" Column="13" />
+      <File FileName="Assets\Functions\SHA512Function.cs" Line="1" Column="1" />
+      <File FileName="Assets\Functions\MiniJson.cs" Line="298" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Assets" expanded="True">
-              <Node name="Functions" expanded="True" />
-              <Node name="FunctionBehavior.cs" selected="True" />
+              <Node name="Functions" expanded="True">
+                <Node name="FunctionBehavior.cs" selected="True" />
+              </Node>
             </Node>
           </Node>
         </State>

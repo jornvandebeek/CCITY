@@ -45,15 +45,15 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\CamDragger.cs" />
-     <Compile Include="Assets\FunctionBehavior.cs" />
      <Compile Include="Assets\Functions\CallStatic.cs" />
+     <Compile Include="Assets\Functions\FunctionBehavior.cs" />
+     <Compile Include="Assets\Functions\Input.cs" />
      <Compile Include="Assets\Functions\LoggerFunction.cs" />
+     <Compile Include="Assets\Functions\MiniJson.cs" />
+     <Compile Include="Assets\Functions\Output.cs" />
      <Compile Include="Assets\Functions\SHA512Function.cs" />
+     <Compile Include="Assets\Functions\Socket.cs" />
      <Compile Include="Assets\Functions\TriggerFunction.cs" />
-     <Compile Include="Assets\Input.cs" />
-     <Compile Include="Assets\MiniJson.cs" />
-     <Compile Include="Assets\Output.cs" />
-     <Compile Include="Assets\Socket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,6 +2,26 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using MiniJSON;
+
+public class TargetId : IAsJson {
+    public string parentId;
+    public int index;
+
+    public TargetId(string parentId, int index){
+        this.parentId = parentId;
+        this.index = index;
+    }
+    public IDictionary AsJson(){
+        Dictionary<string, object> hash = new Dictionary<string, object>();
+        hash.Add("parentId", parentId);
+        hash.Add("index", index);
+        return hash;
+    }
+    public static TargetId NewFromDict(IDictionary dict){
+        return new TargetId((string) dict["parentId"], int.Parse((string) dict["index"]));
+    }
+}
 
 public abstract class Socket : MonoBehaviour, IAsJson {
     static Socket startedDragOn;
@@ -10,6 +30,8 @@ public abstract class Socket : MonoBehaviour, IAsJson {
 
     public FunctionBehavior parentFunction;
     public Socket target;
+
+    TargetId targetId;
     int index;
 
     LineRenderer line;
@@ -18,10 +40,20 @@ public abstract class Socket : MonoBehaviour, IAsJson {
     void Start(){
         connectorLinePrefab = connectorLinePrefab ?? (GameObject) Resources.Load("ConnectorLine");
     }
+    void Update(){
+        if(targetId != null){
+            TryInitTarget();
+        }
+    }
 
-    public void Init(string name, FunctionBehavior parentFunction){
+    public void Init(string name, FunctionBehavior parentFunction, int index){
         this.name = name;
         this.parentFunction = parentFunction;
+        this.index = index;
+    }
+
+    public TargetId GetAsTargetId(){
+        return new TargetId(parentFunction.GetId(), index);
     }
 
     void OnMouseDown() {
@@ -37,10 +69,6 @@ public abstract class Socket : MonoBehaviour, IAsJson {
 
     void OnMouseEnter(){
         lastEntered = this;
-    }
-
-    public object[] GetId(){
-        return new object[] {parentFunction.GetId(), index};
     }
 
     protected abstract void Connect(Socket other);
@@ -74,14 +102,27 @@ public abstract class Socket : MonoBehaviour, IAsJson {
     public IDictionary AsJson(){
         Dictionary<string, object> hash = new Dictionary<string, object>();
         hash.Add("name", name);
-        hash.Add("id", GetId());
+        hash.Add("index", index);
         if(target){
-            hash.Add("targetId", target.GetId());
+            hash.Add("targetId", target.GetAsTargetId());
         } else {
             hash.Add("targetId", null);
         }
         hash.Add("type", this.GetType().Name);
         return hash;
+    }
+
+    public void InitFromDict(IDictionary dict){
+        name = (string) dict["name"];
+        targetId = TargetId.NewFromDict((IDictionary) dict["targetId"]);
+    }
+
+    public void TryInitTarget(){
+        if(FunctionBehavior.allFunctions.ContainsKey(targetId.parentId)){
+            FunctionBehavior targetFunc = FunctionBehavior.allFunctions[targetId.parentId];
+            target = targetFunc.GetSocket(targetId.index);
+            targetId = null;
+        }
     }
 
     public void SetTarget(Socket other){

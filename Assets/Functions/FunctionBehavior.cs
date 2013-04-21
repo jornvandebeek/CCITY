@@ -3,67 +3,74 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System;
+using System.Linq;
+using System.IO;
+using MiniJSON;
 
 class WrongDataTypeException : System.ArgumentException{};
-interface IAsJson{
-    IDictionary AsJson();
-}
 
 public abstract class FunctionBehavior : MonoBehaviour, IAsJson {
-    public InputSocket[] inputs;
-    public Output[] outputs;
-    public string id;
-    string[] inputNames = new string[0];
-    string[] outputNames  = new string[0];
-    List inputDicts;
-    List outputDicts;
+    Socket[] sockets;
 
+    string id;
+
+    virtual string[] getInputNames(){
+        return new string[0];
+    }
+    virtual string[] getOutputNames(){
+        return new string[0];
+    }
 
     static GameObject textMeshLPrefab;
     static GameObject textMeshRPrefab;
     static GameObject textMeshMPrefab;
     static GameObject functionBasePrefab;
-    static List<FunctionBehavior> allFunctions = new List<FunctionBehavior>();
-    static Dictionary<string, Socket> allSockets = new Dictionary<string, Socket>();
-
-    void Awake(){
-        allFunctions.Add(this);
-    }
+    public static Dictionary<string, FunctionBehavior> allFunctions = new Dictionary<string, FunctionBehavior>();
 
     void OnDestroy(){
-        allFunctions.Remove(this);
+        allFunctions.Remove(GetId());
     }
 
     // Use this for initialization
     protected virtual void Start ()
     {
+        if(!allFunctions.ContainsKey(GetId())){
+            Init();
+        }
+    }
+
+    // Update is called once per frame
+    protected virtual void Update ()
+    {
+
+    }
+
+    void Init(){
         textMeshLPrefab = textMeshLPrefab ?? (GameObject) Resources.Load("TextMeshL");
         textMeshRPrefab = textMeshRPrefab ?? (GameObject) Resources.Load("TextMeshR");
         textMeshMPrefab = textMeshMPrefab ?? (GameObject) Resources.Load("TextMeshM");
         functionBasePrefab = functionBasePrefab ?? (GameObject) Resources.Load("functionBaseP");
-        inputs = new InputSocket[inputNames.Length];
+        sockets = new Socket[GetInputNames().Length + GetOutputNames().Length];
         int count = 0;
-        foreach(string name in inputNames){
+        foreach(string name in GetInputNames()){
             GameObject gob = CreateLText(new Vector3(renderer.bounds.min.x, renderer.bounds.max.y, renderer.bounds.max.z) + count* new Vector3(0,-3,0), name);
             InputSocket inp = gob.AddComponent<InputSocket>();
-            inp.Init(name, this);
-            allSockets.Add(inp.GetId(), inp);
-            inputs[count] = inp;
-            count += 1;
+            inp.Init(name, this, count);
+            sockets[count] = inp;
+            count++;
         }
-
-        outputs = new Output[outputNames.Length];
-        count = 0;
-        foreach(string name in outputNames){
-            GameObject gob = CreateRText(new Vector3(renderer.bounds.max.x, renderer.bounds.max.y, renderer.bounds.max.z) + count* new Vector3(0,-3,0), name);
+        int rightCount = 0;
+        foreach(string name in GetOutputNames()){
+            GameObject gob = CreateRText(new Vector3(renderer.bounds.max.x, renderer.bounds.max.y, renderer.bounds.max.z) + rightCount* new Vector3(0,-3,0), name);
             Output outp = gob.AddComponent<Output>();
-            outp.Init(name, this);
-            allSockets.Add(outp.GetId(), outp);
-            outputs[count] = outp;
-            count += 1;
+            outp.Init(name, this, count);
+            sockets[count] = outp;
+            count++;
+            rightCount++;
         }
 
         CreateMText(new Vector3(renderer.bounds.center.x, renderer.bounds.max.y, renderer.bounds.max.z), this.name);
+        allFunctions.Add(GetId(), this);
     }
 
     GameObject CreateLText(Vector3 position, string text){
@@ -91,15 +98,9 @@ public abstract class FunctionBehavior : MonoBehaviour, IAsJson {
 
     //protected abstract void Trigger(InputSocket inp);
     public virtual void Trigger<DataType>(InputSocket inp, DataType data){}
- 
-    // Update is called once per frame
-    protected virtual void Update ()
-    {
- 
-    }
 
     public string GetId(){
-        if(!id){
+        if(id == null){
             id = Guid.NewGuid().ToString();
         }
         return id;
@@ -109,8 +110,7 @@ public abstract class FunctionBehavior : MonoBehaviour, IAsJson {
         Dictionary<string, object> hash = new Dictionary<string, object>();
         hash.Add("name", name);
         hash.Add("id", GetId());
-        hash.Add("inputs", inputs);
-        hash.Add("outputs", outputs);
+        hash.Add("sockets", sockets);
         hash.Add("position", transform.position);
         hash.Add("type", this.GetType().Name);
         return hash;
@@ -118,7 +118,16 @@ public abstract class FunctionBehavior : MonoBehaviour, IAsJson {
 
 
     public static void Export(){
-        string json = MiniJSON.Json.Serialize(allFunctions);
+        string json = MiniJSON.Json.Serialize(allFunctions.Values.ToArray());
+        StreamWriter write = new StreamWriter("functions.json");
+        write.Write(json);
+        write.Close();
+        //Import(json);
+    }
+    public static void Import(){
+        StreamReader read = new StreamReader("functions.json");
+        string json = read.ReadToEnd();
+        read.Close();
         Import(json);
     }
     static void Import(string json){
@@ -131,20 +140,31 @@ public abstract class FunctionBehavior : MonoBehaviour, IAsJson {
             GameObject functionBase = (GameObject) Instantiate(functionBasePrefab, position, Quaternion.identity);
             FunctionBehavior func = (FunctionBehavior) functionBase.AddComponent(typeString);
             func.id = (string) dict["id"];
-            int count = 0;
-            inputDicts = dict["inputs"];
-            outputDicts = dict["outputs"];
+            func.Init();
+            Debug.Log(typeString + " " + func.outputNames.Length);
+            IList socketDicts = (IList) dict["sockets"];
+            foreach(IDictionary sockDict in socketDicts){
+                long index = (long) sockDict["index"];
+                Debug.Log("i"+index);
+                func.sockets[index].InitFromDict(dict);
+            }
         }
-    }
-
-    static void InitInput(IDictionary socketrep, Input inp){
-        inp.SetId(socketrep["id"]);
-        inp.SetTarget(allSockets[(string) socketrep["targetId"]]);
     }
 
     static Vector3 ParseVector3(string stringrep){
         stringrep = stringrep.Substring(1,stringrep.Length-2);
         string[] parts = Regex.Split(stringrep, ", ");
         return new Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
+    }
+
+    public InputSocket GetInput(int index){
+        return (InputSocket) sockets.Where(s => s is InputSocket).ToArray()[index];
+    }
+    public Output GetOutput(int index){
+        return (Output) sockets.Where(s => s is Output).ToArray()[index];
+    }
+
+    public Socket GetSocket(int index){
+        return sockets[index];
     }
 }

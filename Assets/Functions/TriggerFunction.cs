@@ -7,7 +7,6 @@ public class TriggerFunction : FunctionBehavior {
 
     // Use this for initialization
     protected override void Start () {
-        outputNames = new string[]{"out"};
         name = "Trigger";
         base.Start();
     }
@@ -17,7 +16,15 @@ public class TriggerFunction : FunctionBehavior {
 
     }
 
+    override string[] getInputNames(){
+        return new string[0];
+    }
+
+    override string[] getOutputNames(){
+        return new string[]{"out"};
+    }
+
     void OnMouseUp(){
-        outputs[0].Trigger<string>(data);
+        GetOutput(0).Trigger<string>(data);
     }
 }
