@@ -8,11 +8,18 @@ public class CallStatic : FunctionBehavior {
     public string className;
     public string methodName;
 
+    protected override string GetFunctionName(){
+        return "CallStatic";
+    }
+    protected override string[] GetInputNames(){
+        return new string[]{"in"};
+    }
+    protected override string[] GetOutputNames(){
+        return new string[]{"out"};
+    }
+
     protected override void Start ()
     {
-        inputNames = new string[]{"in"};
-        outputNames = new string[]{"out"};
-        name = "CallStatic";
         base.Start();
     }
 

@@ -7,12 +7,20 @@ using System.Security.Cryptography;
 public class SHA512Function : FunctionBehavior
 {
     SHA512 shaM;
+
+    protected override string GetFunctionName(){
+        return "SHA512";
+    }
+    protected override string[] GetInputNames(){
+        return new string[]{"data"};
+    }
+    protected override string[] GetOutputNames(){
+        return new string[]{"hash"};
+    }
+
     protected override void Start ()
     {
-        inputNames = new string[]{"data"};
-        outputNames = new string[]{"hash"};
-        name = "SHA512";
-        shaM = new SHA512Managed ();
+        shaM = new SHA512Managed();
         base.Start();
     }
 

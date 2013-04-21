@@ -19,7 +19,7 @@ public class TargetId : IAsJson {
         return hash;
     }
     public static TargetId NewFromDict(IDictionary dict){
-        return new TargetId((string) dict["parentId"], int.Parse((string) dict["index"]));
+        return new TargetId((string) dict["parentId"], Convert.ToInt32(dict["index"]));
     }
 }
 
@@ -114,13 +114,15 @@ public abstract class Socket : MonoBehaviour, IAsJson {
 
     public void InitFromDict(IDictionary dict){
         name = (string) dict["name"];
-        targetId = TargetId.NewFromDict((IDictionary) dict["targetId"]);
+        if(dict["targetId"] != null){
+            targetId = TargetId.NewFromDict((IDictionary) dict["targetId"]);
+        }
     }
 
     public void TryInitTarget(){
-        if(FunctionBehavior.allFunctions.ContainsKey(targetId.parentId)){
-            FunctionBehavior targetFunc = FunctionBehavior.allFunctions[targetId.parentId];
-            target = targetFunc.GetSocket(targetId.index);
+        Socket target = parentFunction.GetSocketInParentPlane(targetId.parentId, targetId.index);
+        if(target != null){
+            this.target = target;
             targetId = null;
         }
     }

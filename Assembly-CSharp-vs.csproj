@@ -52,6 +52,7 @@
      <Compile Include="Assets\Functions\MiniJson.cs" />
      <Compile Include="Assets\Functions\Output.cs" />
      <Compile Include="Assets\Functions\SHA512Function.cs" />
+     <Compile Include="Assets\Functions\SnapPlane.cs" />
      <Compile Include="Assets\Functions\Socket.cs" />
      <Compile Include="Assets\Functions\TriggerFunction.cs" />
   </ItemGroup>
