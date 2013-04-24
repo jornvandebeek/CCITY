@@ -1,18 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Functions\SnapPlane.cs">
-    <Files>
-      <File FileName="Assets\Functions\SnapPlane.cs" Line="53" Column="23" />
-      <File FileName="Assets\Functions\FunctionBehavior.cs" Line="29" Column="2" />
-      <File FileName="Assets\Functions\Socket.cs" Line="125" Column="62" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Functions" expanded="True">
-                <Node name="SnapPlane.cs" selected="True" />
+                <Node name="ExportFunction.cs" selected="True" />
               </Node>
             </Node>
           </Node>

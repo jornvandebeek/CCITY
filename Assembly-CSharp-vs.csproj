@@ -46,6 +46,7 @@
   <ItemGroup>
      <Compile Include="Assets\CamDragger.cs" />
      <Compile Include="Assets\Functions\CallStatic.cs" />
+     <Compile Include="Assets\Functions\ExportFunction.cs" />
      <Compile Include="Assets\Functions\FunctionBehavior.cs" />
      <Compile Include="Assets\Functions\Input.cs" />
      <Compile Include="Assets\Functions\LoggerFunction.cs" />

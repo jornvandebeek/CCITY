@@ -10,7 +10,7 @@ class WrongDataTypeException : System.ArgumentException{
 
 public abstract class FunctionBehavior : MonoBehaviour, IAsJson{
     Socket[] sockets;
-    SnapPlane parentPlane;
+    protected SnapPlane parentPlane;
     string id;
 
     protected virtual string GetFunctionName(){
@@ -142,4 +142,12 @@ public abstract class FunctionBehavior : MonoBehaviour, IAsJson{
             return null;
         }
     }
+
+    public void OnMouseDrag(){
+        float dist =  parentPlane.transform.position.z - Camera.main.transform.position.z;
+        Vector3 screenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, dist);
+        Vector3 point = Camera.main.ScreenToWorldPoint(screenPoint);
+        transform.position = parentPlane.SnapPositionFor(point, renderer.bounds);
+    }
 }
+

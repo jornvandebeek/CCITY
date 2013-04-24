@@ -20,12 +20,30 @@ public class SnapPlane : MonoBehaviour{
  
     // Update is called once per frame
     void Update(){
-        //ExportWait();
     }
-//    IEnumerable ExportWait(){
-//        yield return new WaitForSeconds(10);
-//        Export();
-//    }
+
+    void OnMouseOver(){
+        if(Input.GetKeyDown("t")){
+
+        }
+    }
+
+    public Vector3 SnapPositionFor(Vector3 point, Bounds rendererBounds){
+        Bounds meshBounds = new Bounds(Vector3.zero, rendererBounds.size);
+        float snapUnit = (renderer.bounds.max.x - renderer.bounds.min.x)/50f;
+        float offsetX = (float) Math.Round((point.x - renderer.bounds.min.x)/snapUnit)*snapUnit;
+        float offsetY = (float) Math.Round((point.y - renderer.bounds.min.y)/snapUnit)*snapUnit;
+        Vector3 snappedPos = new Vector3(renderer.bounds.min.x+ offsetX,
+            renderer.bounds.min.y+ offsetY, 0);
+        return ClampVector3(snappedPos,
+            new Vector3(renderer.bounds.min.x + meshBounds.max.x,renderer.bounds.min.y + meshBounds.max.y,renderer.bounds.min.z- 0.1f),
+            new Vector3(renderer.bounds.max.x - meshBounds.max.x,renderer.bounds.max.y - meshBounds.max.y,renderer.bounds.max.z- 0.1f));
+    }
+
+    public static Vector3 ClampVector3(Vector3 vec, Vector3 min, Vector3 max)
+    {
+        return Vector3.Min(max,Vector3.Max(min,vec));
+    }
 
     public void Export(){
         string json = MiniJSON.Json.Serialize(childFunctions.Values.ToArray());
