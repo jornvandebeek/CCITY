@@ -1,13 +1,23 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Functions\Text.cs">
+    <Files>
+      <File FileName="Assets\Functions\SnapPlane.cs" Line="45" Column="72" />
+      <File FileName="Assets\Functions\Text.cs" Line="13" Column="109" />
+      <File FileName="Assets\Functions\FunctionBehavior.cs" Line="119" Column="37" />
+      <File FileName="Assets\Functions\Socket.cs" Line="22" Column="62" />
+      <File FileName="Assets\Functions\SHA512Function.cs" Line="35" Column="1" />
+      <File FileName="Assets\Functions\TriggerFunction.cs" Line="29" Column="9" />
+      <File FileName="Assets\Functions\CallStatic.cs" Line="33" Column="1" />
+      <File FileName="Assets\Functions\ExportFunction.cs" Line="30" Column="1" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Functions" expanded="True">
-                <Node name="ExportFunction.cs" selected="True" />
+                <Node name="Text.cs" selected="True" />
               </Node>
             </Node>
           </Node>

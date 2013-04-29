@@ -5,10 +5,10 @@ using System;
 using MiniJSON;
 
 public class TargetId : IAsJson {
-    public string parentId;
+    public int parentId;
     public int index;
 
-    public TargetId(string parentId, int index){
+    public TargetId(int parentId, int index){
         this.parentId = parentId;
         this.index = index;
     }
@@ -19,7 +19,7 @@ public class TargetId : IAsJson {
         return hash;
     }
     public static TargetId NewFromDict(IDictionary dict){
-        return new TargetId((string) dict["parentId"], Convert.ToInt32(dict["index"]));
+        return new TargetId(Convert.ToInt32(dict["parentId"]), Convert.ToInt32(dict["index"]));
     }
 }
 
@@ -39,6 +39,7 @@ public abstract class Socket : MonoBehaviour, IAsJson {
 
     void Start(){
         connectorLinePrefab = connectorLinePrefab ?? (GameObject) Resources.Load("ConnectorLine");
+        line = ((GameObject) Instantiate(connectorLinePrefab, new Vector3(0,0,0), Quaternion.identity)).GetComponent<LineRenderer>();
     }
     void Update(){
         if(targetId != null){
@@ -74,26 +75,40 @@ public abstract class Socket : MonoBehaviour, IAsJson {
     protected abstract void Connect(Socket other);
 
     protected virtual void Connect<TargetType>(Socket other) where TargetType : Socket{
-        if(other && other is TargetType){
+
+        if(other && other is TargetType && other.parentFunction != parentFunction){
             target = (TargetType) other;
-            addLineTo(target);
             other.target = this;
         } else {
+            target = null;
             if(target){
                 target.target = null;
-                target.addLineTo(null);
             }
-            target = null;
-            addLineTo(null);
         }
+        if(target){
+            target.UpdateLine();
+        }
+        UpdateLine();
     }
 
-    protected void addLineTo(Socket other){
-        line = line ?? ((GameObject) Instantiate(connectorLinePrefab, new Vector3(0,0,0), Quaternion.identity)).GetComponent<LineRenderer>();
-        if(other && other.parentFunction != parentFunction && other.target != this){
-            line.enabled = true;
-            line.SetPosition(0, transform.position + new Vector3(0,0,-0.1f));
-            line.SetPosition(1, other.transform.position + new Vector3(0,0,-0.1f));
+    void Disconnect(){
+        if(target != null && target.target != null){
+            target.target = null;
+            target.UpdateLine();
+        }
+        target = null;
+    }
+
+    public void UpdateLine(){
+        if(target){
+            if(!target.line.enabled){
+                line.enabled = true;
+                line.SetPosition(0, transform.position + new Vector3(0,0,-0.1f));
+                line.SetPosition(1, target.transform.position + new Vector3(0,0,-0.1f));
+            } else {
+                line.enabled = false;
+                target.UpdateLine();
+            }
         } else {
             line.enabled = false;
         }
@@ -122,7 +137,7 @@ public abstract class Socket : MonoBehaviour, IAsJson {
     public void TryInitTarget(){
         Socket target = parentFunction.GetSocketInParentPlane(targetId.parentId, targetId.index);
         if(target != null){
-            this.target = target;
+            Connect(target);
             targetId = null;
         }
     }

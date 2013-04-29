@@ -55,6 +55,7 @@
      <Compile Include="Assets\Functions\SHA512Function.cs" />
      <Compile Include="Assets\Functions\SnapPlane.cs" />
      <Compile Include="Assets\Functions\Socket.cs" />
+     <Compile Include="Assets\Functions\Text.cs" />
      <Compile Include="Assets\Functions\TriggerFunction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

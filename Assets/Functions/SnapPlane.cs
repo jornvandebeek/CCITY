@@ -8,23 +8,79 @@ using MiniJSON;
 using System.Linq;
 
 public class SnapPlane : MonoBehaviour{
-    public Dictionary<string, FunctionBehavior> childFunctions = new Dictionary<string, FunctionBehavior>();
+    public Dictionary<int, FunctionBehavior> childFunctions = new Dictionary<int, FunctionBehavior>();
 
     static GameObject functionBasePrefab;
 
-    // Use this for initialization
+    GameObject inputText;
+    List<GameObject> functionChoices = new List<GameObject>();
+
     void Start(){
         functionBasePrefab = functionBasePrefab ?? (GameObject)Resources.Load("functionBaseP");
+        //inputText = (inputText ?? Text.CreateLText(transform.position, "Type function name", transform));
+        //Debug.Log(inputText); // guess what this prints
         Import();
     }
  
     // Update is called once per frame
     void Update(){
+        if(inputText != null){
+            if(Input.GetKeyDown(KeyCode.Return)){
+                SpawnFunctionOnCameraTarget(inputText.GetComponent<TextMesh>().text);
+                Destroy(inputText);
+                foreach(GameObject text in functionChoices){
+                    Destroy(text);
+                }
+                return;
+            }
+            TextMesh tm = inputText.GetComponent<TextMesh>();
+            tm.text += Input.inputString;
+            foreach(GameObject text in functionChoices){
+                Destroy(text);
+            }
+            SpawnFunctionChoices(tm.text);
+        }
+    }
+    void SpawnFunctionChoices(string filter){
+        IEnumerable<Type> funcTypes = typeof(FunctionBehavior).Assembly.GetTypes().Where(
+            type => type.IsSubclassOf(typeof(FunctionBehavior)) &&
+                    Regex.IsMatch(type.Name.ToLower(), @".*"+filter.ToLower()+@".*"));
+        int count = 1;
+        foreach(Type funcType in funcTypes){
+            functionChoices.Add(
+                Text.CreateLTextClickable(CameraPositionOnPlane() + count*new Vector3(0f,-2f,0f), funcType.Name, Camera.main.transform, SpawnFunctionOnCameraTarget)
+            );
+            count++;
+        }
+    }
+
+    Vector3 CameraPositionOnPlane(){
+        return new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z-0.1f);
+    }
+
+    void SpawnFunctionOnCameraTarget(string functionName){
+        SpawnFunction(functionName, 0, CameraPositionOnPlane(), null);
+    }
+
+    void SpawnFunction(string functionName, int id, Vector3 position, IList sockets){
+        Type type = Type.GetType(functionName);
+        if(type == null || !type.IsSubclassOf(typeof(FunctionBehavior))){
+            Debug.Log("Tried to spawn illegal type"+ functionName);
+            return;
+        }
+        GameObject functionBase = (GameObject)Instantiate(functionBasePrefab, position, functionBasePrefab.transform.rotation);
+        FunctionBehavior func = (FunctionBehavior)functionBase.AddComponent(functionName);
+        func.Init(id, this, sockets);
+        functionBase.transform.parent = transform;
     }
 
     void OnMouseOver(){
-        if(Input.GetKeyDown("t")){
-
+        if(Input.GetKeyDown(KeyCode.T)){
+            Vector3 position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, 30f));
+            if(inputText == null){
+                inputText = Text.CreateLText(position, "", Camera.main.transform);
+            }
+            SpawnFunctionChoices("");
         }
     }
 
@@ -64,17 +120,8 @@ public class SnapPlane : MonoBehaviour{
         object functions = MiniJSON.Json.Deserialize(json);
         foreach(IDictionary dict in (IList) functions){
             string typeString = (string)dict["type"];
-            //Type type = Type.GetType(typeString);
-
             Vector3 position = ParseVector3((string)dict["position"],parentPlane.transform.position.z - 0.1f);
-            GameObject functionBase = (GameObject)Instantiate(functionBasePrefab, position, functionBasePrefab.transform.rotation);
-            FunctionBehavior func = (FunctionBehavior)functionBase.AddComponent(typeString);
-            func.Init((string) dict["id"], parentPlane);
-            IList socketDicts = (IList)dict["sockets"];
-            foreach(IDictionary sockDict in socketDicts){
-                int index = Convert.ToInt32(sockDict["index"]);
-                func.InitSocket(index, sockDict);
-            }
+            parentPlane.SpawnFunction(typeString, Convert.ToInt32(dict["id"]), position, (IList)dict["sockets"]);
         }
     }
 
